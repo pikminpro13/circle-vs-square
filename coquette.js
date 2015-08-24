@@ -15,7 +15,7 @@
         game.update(interval);
       }
 
-      self.entities.update(interval)
+      self.entities.update(interval);
       self.renderer.update(interval);
       self.inputter.update();
     });

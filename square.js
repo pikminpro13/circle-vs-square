@@ -18,6 +18,10 @@ window.addEventListener('load', function() {
 
 var Game = function () {
 	this.c = new Coquette(this, 'circle-vs-square', 800, 600, 'white');
+	this.c.height = 600;
+	this.c.width = 800;
+	this.c.gravity = 1;
+
 	var squareSettings = {
 		center: { x:200, y:400}, 
 		size:{x:100, y:100}, 
@@ -43,11 +47,34 @@ var Circle = function (game, settings) {
 	this.center = settings.center;
 	this.size = settings.size;
 	this.color = settings.color;
+	this.velocity = {x: 5, y:0};
 };
 
 Circle.prototype = {
 	update: function() {
+		// WHY THIS NO WORK?! (ノಠ益ಠ)ノ彡┻━┻
+		// var input = this.c.inputter;
+		// var down  = this.c.inputter.isDown;
 
+		// Lateral movement
+		if(this.c.inputter.isDown(this.c.inputter.J))
+			this.center.x -= this.velocity.x;
+		if(this.c.inputter.isDown(this.c.inputter.L))
+			this.center.x += this.velocity.x;
+
+		// Vertical movement
+		if(this.center.y + this.size.y/2 <= this.c.height) {
+			this.velocity.y -= this.c.gravity;
+		} else {
+			this.velocity.y = 0;
+		}
+		if(this.c.inputter.isDown(this.c.inputter.I)){
+			if(this.center.y > this.c.height - 100 && this.velocity.y >= 0)
+				this.velocity.y = 20;
+		}
+		
+		// console.log(this.velocity.y);
+		this.center.y -= this.velocity.y;
 	},
 
 	draw: function(ctx) {
@@ -69,11 +96,30 @@ var Square = function (game, settings) {
 	this.center = settings.center;
 	this.size  = settings.size;
 	this.color = settings.color;
+	this.velocity = {x:5, y:0};
 };
 
 Square.prototype = {
 	update: function() {
+		// Lateral movement
+		if(this.c.inputter.isDown(this.c.inputter.A))
+			this.center.x -= this.velocity.x;
+		if(this.c.inputter.isDown(this.c.inputter.D))
+			this.center.x += this.velocity.x;
 
+		// Vertical movement
+		if(this.center.y + this.size.y/2 <= this.c.height) {
+			this.velocity.y -= this.c.gravity;
+		} else {
+			this.velocity.y = 0;
+		}
+		if(this.c.inputter.isDown(this.c.inputter.W)){
+			if(this.center.y > this.c.height - 50 && this.velocity.y >= 0)
+				this.velocity.y = 10;
+		}
+		
+		// console.log(this.velocity.y);
+		this.center.y -= this.velocity.y;
 	},
 
 	draw: function(ctx) {
